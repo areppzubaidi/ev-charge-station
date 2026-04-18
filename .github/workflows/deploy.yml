@@ -60,6 +60,10 @@ jobs:
           sudo apt install -y ansible python3-pip
           pip3 install boto3 botocore
 
+      - name: Install Ansible AWS collection
+        run: |
+          ansible-galaxy collection install amazon.aws
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
@@ -71,4 +75,3 @@ jobs:
           cd ansible
           ansible-playbook playbook.yml \
             --extra-vars "s3_bucket=${{ env.ARTIFACT_BUCKET }} logs_bucket=${{ env.LOGS_BUCKET }}"
-# Trigger new run
