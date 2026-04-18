@@ -6,8 +6,8 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ARTIFACT_BUCKET: "ev-station-artifacts-xxxx"   # Replace with your actual bucket name from terraform output
-  LOGS_BUCKET: "ev-station-logs-xxxx"            # Replace
+  ARTIFACT_BUCKET: "ev-station-artifacts-4e19553c"
+  LOGS_BUCKET: "ev-station-logs-4e19553c"
 
 jobs:
   build-test:
