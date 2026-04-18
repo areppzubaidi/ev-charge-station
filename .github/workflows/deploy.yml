@@ -60,9 +60,34 @@ jobs:
           sudo apt install -y ansible python3-pip
           pip3 install boto3 botocore
 
-      - name: Install Ansible AWS collection
+      - name: Get EC2 instance IPs and create inventory
         run: |
-          ansible-galaxy collection install amazon.aws
+          # Fetch public IPs of running instances with tag Name=ev-station-instance
+          ips=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=ev-station-instance" "Name=instance-state-name,Values=running" \
+            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --output text)
+          
+          # Write inventory file
+          echo "[ev_servers]" > ansible/inventory.ini
+          for ip in $ips; do
+            echo "$ip" >> ansible/inventory.ini
+          done
+          
+          echo "Inventory created:"
+          cat ansible/inventory.ini
+
+      - name: Test SSH connectivity
+        run: |
+          # Wait for instances to be ready
+          sleep 10
+          # Read IPs from inventory
+          while IFS= read -r ip; do
+            if [[ "$ip" =~ ^[0-9] ]]; then
+              echo "Testing SSH to $ip"
+              ssh -i ~/ev-key.pem -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@$ip "echo OK" || exit 1
+            fi
+          done < ansible/inventory.ini
 
       - name: Set up SSH key
         run: |

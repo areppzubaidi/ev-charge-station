@@ -1,5 +1,5 @@
 - name: Configure EV station web servers
-  hosts: tag_Name_ev_station_instance
+  hosts: ev_servers
   become: yes
   tasks:
     - name: Update apt cache
