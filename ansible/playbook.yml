@@ -1,0 +1,46 @@
+- name: Configure EV station web servers
+  hosts: tag_Name_ev-station
+  become: yes
+  vars:
+    s3_bucket: "ev-station-artifacts-{{ ansible_env.AWS_ACCOUNT_ID }}"  # to be set dynamically
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Ensure nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Create web root
+      file:
+        path: /var/www/html
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Download website from S3
+      shell: |
+        aws s3 sync s3://{{ s3_bucket }}/website/ /var/www/html/ --delete
+      args:
+        executable: /bin/bash
+
+    - name: Set permissions
+      file:
+        path: /var/www/html
+        recurse: yes
+        owner: www-data
+        group: www-data
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
