@@ -64,7 +64,7 @@ jobs:
         run: |
           # Fetch public IPs of running instances with tag Name=ev-station-instance
           ips=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=ev-station" "Name=instance-state-name,Values=running" \
+            --filters "Name=tag:Name,Values=ev-station""Name=instance-state-name,Values=running" \
             --query "Reservations[*].Instances[*].PublicIpAddress" \
             --output text)
           
