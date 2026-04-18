@@ -1,8 +1,6 @@
 - name: Configure EV station web servers
-  hosts: tag_Name_ev-station
+  hosts: tag_Name_ev_station_instance
   become: yes
-  vars:
-    s3_bucket: "ev-station-artifacts-{{ ansible_env.AWS_ACCOUNT_ID }}"  # to be set dynamically
   tasks:
     - name: Update apt cache
       apt:
@@ -32,6 +30,8 @@
         aws s3 sync s3://{{ s3_bucket }}/website/ /var/www/html/ --delete
       args:
         executable: /bin/bash
+      environment:
+        AWS_REGION: us-east-1
 
     - name: Set permissions
       file:
