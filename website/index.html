@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearest EV Charge Station</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="hero">
+        <h1>⚡ Nearest EV Charge Station</h1>
+        <p>Find your next charge in seconds – realtime availability</p>
+        <button id="findBtn">Locate Me</button>
+        <div id="result"></div>
+    </div>
+    <footer>
+        <p>© 2025 EV Charge Network – Sustainable Mobility</p>
+    </footer>
+    <script>
+        document.getElementById('findBtn').addEventListener('click', () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>📍 Simulated: Closest station is 0.3 miles away, 4/6 ports free.</p>';
+        });
+    </script>
+</body>
+</html>
